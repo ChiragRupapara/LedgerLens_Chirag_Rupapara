@@ -1,0 +1,17 @@
+# secrets
+.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# data
+*.db
+uploads/*
+!uploads/.gitkeep
+
+# misc
+.pytest_cache/
+.DS_Store
