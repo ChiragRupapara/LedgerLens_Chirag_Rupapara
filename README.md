@@ -76,3 +76,34 @@ pytest tests/ -v
   long digit strings (e.g. transaction reference numbers) as false positives.
   Over-redaction in logs was judged safer than under-redaction.
 
+## Deployment
+
+The app is deployed live on Render's free tier (Docker-based Web Service,
+no credit card required):
+
+**https://ledgerlens-chirag-rupapara.onrender.com/docs**
+
+Note: the free instance spins down after 15 minutes of inactivity — the
+first request after idle time may take 30-60 seconds to respond while it
+wakes back up. This is expected free-tier behavior, not a bug.
+
+### Storage is ephemeral on the free tier
+
+Render's free Web Services have no persistent disk. The SQLite database
+and any uploaded/watermarked images reset whenever the service restarts
+or redeploys. This mirrors the same limitation the original project spec
+flagged for GCP Cloud Run. For a genuinely persistent production
+deployment, the storage layer would need to move to external managed
+storage (e.g. a hosted Postgres database + S3/GCS-compatible object
+storage) — out of scope for a zero-cost build.
+
+### Local deployment (full stack, including observability)
+
+Render only runs the FastAPI app itself. For the complete stack —
+app + Prometheus + Grafana — run locally:
+
+docker-compose up
+
+- App: http://127.0.0.1:8000/docs
+- Prometheus: http://127.0.0.1:9090
+- Grafana: http://127.0.0.1:3000
