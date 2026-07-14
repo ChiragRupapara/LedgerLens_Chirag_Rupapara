@@ -5,7 +5,7 @@ import shutil
 from pathlib import Path
 
 from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from prometheus_client import make_asgi_app
 
 
@@ -91,6 +91,13 @@ async def ingest(file: UploadFile = File(...)):
         "flagged_fields": [f.model_dump() for f in result.flagged_fields],
         "invoice": invoice.model_dump(),
     })
+
+@app.get("/images/{document_id}/{filename}")
+def get_image(document_id: str, filename: str):
+    image_path = BASE_DIR / "uploads" / document_id / filename
+    if not image_path.exists():
+        return JSONResponse(status_code=404, content={"error": "Image not found"})
+    return FileResponse(image_path)
 
 @app.get("/review")
 def get_pending_reviews():
