@@ -36,11 +36,21 @@ app.mount("/metrics", metrics_app)
 
 @app.post("/ingest")
 async def ingest(file: UploadFile = File(...)):
-    # 1. Generate a unique ID for this document
-    doc_id = str(uuid.uuid4())[:8]
+    # Create database session
+    db = SessionLocal()
 
-    # 2. Save the uploaded file to uploads/{doc_id}/original.<ext>
-    doc_folder = BASE_DIR / "uploads" / doc_id
+    # 1. Create a placeholder database record first
+    doc_row = Document(
+        filename=file.filename,
+        extracted_json="",
+        status="processing",
+    )
+    db.add(doc_row)
+    db.commit()
+    db.refresh(doc_row)
+
+    # 2. Use the database ID as the folder name
+    doc_folder = BASE_DIR / "uploads" / str(doc_row.id)
     doc_folder.mkdir(parents=True, exist_ok=True)
 
     ext = file.filename.split(".")[-1]
@@ -48,32 +58,32 @@ async def ingest(file: UploadFile = File(...)):
 
     with open(saved_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
-    
-    # 2.5. Watermark the stored image with doc_id + timestamp
-    watermarked_path = add_watermark(str(saved_path), doc_id)    
+
+    # 2.5 Watermark the stored image with document ID
+    watermarked_path = add_watermark(str(saved_path), str(doc_row.id))
 
     # 3. Run extraction
     import time
+
     start_time = time.time()
     invoice = extract_invoice(str(saved_path))
     elapsed = time.time() - start_time
     extraction_latency_seconds.observe(elapsed)
 
     # Log the extraction (PII-redacted, never log raw invoice text)
-    log_line = f"[INGEST] doc_id={doc_id} extracted={invoice.model_dump_json()}"
+    log_line = (
+        f"[INGEST] document_id={doc_row.id} "
+        f"extracted={invoice.model_dump_json()}"
+    )
     print(redact_pii(log_line))
 
     # 4. Run confidence routing
     result = route_invoice(invoice, threshold=0.75)
 
-    # 5. Save to the database
-    db = SessionLocal()
-    doc_row = Document(
-        filename=file.filename,
-        extracted_json=invoice.model_dump_json(),
-        status=result.status,
-    )
-    db.add(doc_row)
+    # 5. Update the database record
+    doc_row.extracted_json = invoice.model_dump_json()
+    doc_row.status = result.status
+
     db.commit()
     db.refresh(doc_row)
     db.close()
@@ -140,3 +150,19 @@ def approve_document(document_id: int, corrected_json: InvoiceSchema):
     pending_review_queue_size.dec()
 
     return {"document_id": document_id, "status": "approved"}
+
+@app.get("/documents")
+def list_documents():
+    db = SessionLocal()
+    docs = db.query(Document).order_by(Document.created_at.desc()).all()
+    db.close()
+
+    return [
+        {
+            "document_id": doc.id,
+            "filename": doc.filename,
+            "status": doc.status,
+            "created_at": doc.created_at.isoformat(),
+        }
+        for doc in docs
+    ]
