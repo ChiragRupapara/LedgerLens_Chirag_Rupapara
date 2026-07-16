@@ -48,7 +48,8 @@ LedgerLens_Chirag_Rupapara/
 ├── Dockerfile
 ├── docker-compose.yml       # app + prometheus + grafana
 ├── prometheus.yml
-└── requirements.txt
+├── requirements.txt
+└── Dockerfile.streamlit
 
 ## Running locally
 
