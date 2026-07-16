@@ -81,7 +81,8 @@ pytest tests/ -v
 The app is deployed live on Render's free tier (Docker-based Web Service,
 no credit card required):
 
-**https://ledgerlens-chirag-rupapara.onrender.com/docs**
+**https://ledgerlens-chirag-rupapara.onrender.com/docs** --> FastAPI
+**https://ledgerlens-chirag-rupapara-api.onrender.com/** --> Streamlit
 
 Note: the free instance spins down after 15 minutes of inactivity — the
 first request after idle time may take 30-60 seconds to respond while it
