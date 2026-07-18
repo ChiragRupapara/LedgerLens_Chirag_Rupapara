@@ -15,6 +15,7 @@ sys.path.append(str(BASE_DIR / "app" / "services"))
 
 from invoice import InvoiceSchema
 from extract import extract_invoice
+from moderation import moderate_image
 from router import route_invoice
 from db import SessionLocal, Document, init_db
 from watermark import add_watermark
@@ -62,7 +63,32 @@ async def ingest(file: UploadFile = File(...)):
     # 2.5 Watermark the stored image with document ID
     watermarked_path = add_watermark(str(saved_path), str(doc_row.id))
 
-    # 3. Run extraction
+    
+    # 3. Moderate image first
+    moderation = moderate_image(str(saved_path))
+
+    moderation_result = moderate_image(str(saved_path))
+
+    if moderation_result.decision == "BLOCK":
+        doc_row.status = "blocked"
+        db.commit()
+        db.close()
+        return JSONResponse(
+            status_code=400,
+            content=moderation_result.model_dump()
+        )
+
+    if moderation_result.decision == "HUMAN_REVIEW":
+        doc_row.status = "human_review"
+        db.commit()
+        db.close()
+
+        return JSONResponse(
+            status_code=202,
+            content=moderation_result.model_dump()
+        )
+
+    # Safe image → continue extraction
     import time
 
     start_time = time.time()
