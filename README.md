@@ -109,7 +109,7 @@ Only images classified as **ALLOW** are sent to the invoice extraction model.
                      │
       ┌──────────────┼──────────────┐
       │              │              │
-   ALLOW         BLOCK        HUMAN_REVIEW
+    Allow          Block        Human_Review
       │              │              │
       ▼              ▼              ▼
  Gemini Invoice   Reject        Hold for Review
