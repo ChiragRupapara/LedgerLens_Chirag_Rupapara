@@ -102,7 +102,7 @@ The moderation system returns one of three decisions:
 
 Only images classified as **ALLOW** are sent to the invoice extraction model.
 
-'''
+```
 Upload Image
       │
       ▼
@@ -123,8 +123,7 @@ Confidence Routing
       ├───────────────┐
       ▼               ▼
 Auto Approve     Pending Review
-'''
-
+```
 ## Running locally
 
 1. Copy `.env.example` to `.env` and add a free Gemini API key from
