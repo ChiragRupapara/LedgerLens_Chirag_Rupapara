@@ -53,7 +53,7 @@ isn't confident about.
 | Deployment | Render (two independent free-tier web services) |
 
 ## Project structure
-
+```
 LedgerLens_Chirag_Rupapara/
 ├── app/
 │   ├── main.py              # FastAPI app: /ingest, /review, /approve, /documents, /images, /metrics
@@ -76,7 +76,7 @@ LedgerLens_Chirag_Rupapara/
 ├── docker-compose.yml                 # app + prometheus + grafana (local dev)
 ├── prometheus.yml
 └── requirements.txt
-
+```
 ## API endpoints (FastAPI backend)
 
 | Endpoint | Method | Purpose |
