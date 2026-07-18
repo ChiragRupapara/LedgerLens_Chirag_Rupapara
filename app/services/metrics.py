@@ -1,5 +1,10 @@
 from prometheus_client import Counter, Histogram, Gauge
 
+moderation_latency_seconds = Histogram(
+    "moderation_latency_seconds",
+    "Time taken for Gemini moderation before invoice extraction",
+)
+
 extraction_latency_seconds = Histogram(
     "extraction_latency_seconds",
     "Time taken for Gemini to extract invoice data from an image",

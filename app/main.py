@@ -21,6 +21,7 @@ from db import SessionLocal, Document, init_db
 from watermark import add_watermark
 from redact import redact_pii
 from metrics import (
+    moderation_latency_seconds,
     extraction_latency_seconds,
     token_cost_usd_total,
     auto_approvals_total,
@@ -65,9 +66,13 @@ async def ingest(file: UploadFile = File(...)):
 
     
     # 3. Moderate image first
-    moderation = moderate_image(str(saved_path))
+    import time
 
+    start = time.time()
     moderation_result = moderate_image(str(saved_path))
+    elapsed = time.time() - start
+
+    moderation_latency_seconds.observe(elapsed)
 
     if moderation_result.decision == "BLOCK":
         doc_row.status = "blocked"
