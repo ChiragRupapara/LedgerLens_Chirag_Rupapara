@@ -102,6 +102,7 @@ The moderation system returns one of three decisions:
 
 Only images classified as **ALLOW** are sent to the invoice extraction model.
 
+'''
 Upload Image
       │
       ▼
@@ -122,7 +123,7 @@ Confidence Routing
       ├───────────────┐
       ▼               ▼
 Auto Approve     Pending Review
-
+'''
 
 ## Running locally
 
