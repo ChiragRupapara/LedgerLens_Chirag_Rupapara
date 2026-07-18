@@ -102,29 +102,27 @@ The moderation system returns one of three decisions:
 
 Only images classified as **ALLOW** are sent to the invoice extraction model.
 
-                Upload Image
-                     │
-                     ▼
-         Gemini Moderation Gate
-                     │
-      ┌──────────────┼──────────────┐
-      │              │              │
-    Allow          Block        Human_Review
-      │              │              │
-      ▼              ▼              ▼
- Gemini Invoice   Reject      Hold for Review
-   Extraction
+Upload Image
+      │
+      ▼
+Gemini Moderation Gate
+      ├───────────────┬───────────────┐
+      ▼               ▼               ▼
+   Allow            Block         Human Review
+      │               │               │
+      ▼               ▼               ▼
+Gemini Invoice     Reject      Hold for Review
+  Extraction
       │
       ▼
 Pydantic Validation
       │
       ▼
 Confidence Routing
-      │
-      ▼
- ┌─────────────────────┐ 
- ▼                     ▼ 
-Auto Approve      Pending Review
+      ├───────────────┐
+      ▼               ▼
+Auto Approve     Pending Review
+
 
 ## Running locally
 
