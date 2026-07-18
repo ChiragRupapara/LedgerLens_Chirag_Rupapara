@@ -56,7 +56,7 @@ isn't confident about.
 ```
 LedgerLens_Chirag_Rupapara/
 ├── app/
-│   ├── main.py              # FastAPI app: /ingest, /review, /approve, /documents, /images, /metrics
+│   ├── main.py                        # FastAPI app: /ingest, /review, /approve, /documents, /images, /metrics
 │   ├── schemas/
 │   │   ├── invoice.py                 # InvoiceSchema, LineItem (Pydantic)
 │   │   └── moderation_schemas.py      # ModerationSchema (Pydantic)
