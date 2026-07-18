@@ -112,8 +112,8 @@ Only images classified as **ALLOW** are sent to the invoice extraction model.
     Allow          Block        Human_Review
       │              │              │
       ▼              ▼              ▼
- Gemini Invoice   Reject        Hold for Review
-  Extraction
+ Gemini Invoice   Reject      Hold for Review
+   Extraction
       │
       ▼
 Pydantic Validation
@@ -121,9 +121,10 @@ Pydantic Validation
       ▼
 Confidence Routing
       │
- ┌────┴───────────┐
- │                │
-Auto Approve   Pending Review
+      ▼
+ ┌─────────────────────┐ 
+ ▼                     ▼ 
+Auto Approve      Pending Review
 
 ## Running locally
 
