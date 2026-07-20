@@ -2,6 +2,16 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-  - job_name: "ledgerlens"
+  # Local Docker application
+  - job_name: "ledgerlens-local"
     static_configs:
-      - targets: ["app:8000"]
+      - targets:
+          - "app:8000"
+
+  # Render FastAPI application
+  - job_name: "ledgerlens-render"
+    scheme: https
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - "ledgerlens-chirag-rupapara.onrender.com"
