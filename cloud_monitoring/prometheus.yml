@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  # Render FastAPI application
+  - job_name: "ledgerlens-render"
+    scheme: https
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - "ledgerlens-chirag-rupapara.onrender.com"
