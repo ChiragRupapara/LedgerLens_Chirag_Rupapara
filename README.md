@@ -75,7 +75,10 @@ LedgerLens_Chirag_Rupapara/
 ├── Dockerfile.streamlit               # Streamlit frontend image
 ├── docker-compose.yml                 # app + prometheus + grafana (local dev)
 ├── prometheus.yml
-└── requirements.txt
+├── requirements.txt
+└── cloud_monitoring 
+    ├── Dockerfile                
+    └── prometheus.yml
 ```
 ## API endpoints (FastAPI backend)
 
@@ -176,6 +179,8 @@ Docker-based Web Services** (no credit card required for either):
 
 - **FastAPI backend:** https://ledgerlens-chirag-rupapara.onrender.com/docs
 - **Streamlit frontend:** https://ledgerlens-chirag-rupapara-api.onrender.com/
+- **Prometheus:** https://ledgerlens-chirag-rupapara-prometheus.onrender.com/targets
+- **Grefana Deshborad:** https://vividpigeon3045.grafana.net/public-dashboards/e8d2b7ea3e604d21b35993a4beeeeaab?refresh=auto
 
 The Streamlit service is configured with an `API_URL` environment variable
 pointing at the live FastAPI URL above, so the two deployed services talk to
@@ -191,7 +196,7 @@ This is expected free-tier behavior, not a bug.
 
 On Render's free tier, services may go to sleep after a period of inactivity. 
 Before uploading an image through the Streamlit application, 
-the FastAPI backend (Render URL) must be awakened by making an initial request. 
+the FastAPI backend (Render URL) and Prometheus must be awakened by making an initial request. 
 The first request may take a short time to complete while the service starts up.
 
 ### Storage is ephemeral on the free tier
